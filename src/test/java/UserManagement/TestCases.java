@@ -41,7 +41,7 @@ public class TestCases
 
 
 
-    @Test( priority =1 ,description =" Verify User is  able Register with valid Credential")
+    @Test( priority =1 ,description =" Verify User is  able to Register  with valid Credential")
     public void RegisterUser ()
     {
 
