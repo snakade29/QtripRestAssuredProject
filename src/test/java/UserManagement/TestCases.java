@@ -136,7 +136,7 @@ public void   GetAdventureDetails() throws IOException {
     JsonArray responseJsonArray = JsonParser.parseString(response.asString()).getAsJsonArray();
     // Load the expected JSON from a file and parse it to JsonArray
 //         Load the expected JSON from a file and parse it to JsonObject
-    String expectedJsonContent = new String(Files.readAllBytes(Paths.get("/Users/testvagrant/IdeaProjects/RestAssuredLearning/Resources/TestData/Search_Adventure_ResponsePayload.json")));
+    String expectedJsonContent = new String(Files.readAllBytes(Paths.get(System.getProperty("user.dir")+"/Resources/TestData/Search_Adventure_ResponsePayload.json")));
 
 
     JsonArray expectedJsonArray = JsonParser.parseString(expectedJsonContent).getAsJsonArray();
@@ -274,7 +274,7 @@ public void   GetAdventureDetails() throws IOException {
         // Load the expected JSON from a file and parse it to JsonArray
 //
 //         Load the expected JSON from a file and parse it to JsonObjec
-        String expectedJsonContent = new String(Files.readAllBytes(Paths.get("/Users/testvagrant/IdeaProjects/RestAssuredLearning/Resources/TestData/Search_City_ResponsePayload.json")));
+        String expectedJsonContent = new String(Files.readAllBytes(Paths.get(System.getProperty("user.dir")+"/Resources/TestData/Search_City_ResponsePayload.json")));
 
 
         JsonArray expectedJsonArray = JsonParser.parseString(expectedJsonContent).getAsJsonArray();
