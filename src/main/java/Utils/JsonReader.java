@@ -19,7 +19,7 @@ public class JsonReader {
     public static JSONObject getJsonData() throws IOException, ParseException {
 
         //pass the path of the testdata.json file
-        File filename = new File("resources//TestData//testdata.json");
+        File filename = new File("Resources//TestData//RegisterTestData.json");
         //convert json file into string
         String json = FileUtils.readFileToString(filename, "UTF-8");
         //parse the string into object

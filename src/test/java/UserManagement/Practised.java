@@ -1,15 +1,22 @@
 //package UserManagement;
 //
+//import static Utils.JsonReader.getJsonArray;
 //import static io.restassured.RestAssured.*;
 //import static org.hamcrest.MatcherAssert.assertThat;
 //import static org.hamcrest.Matchers.*;
 //
 //
+//import DataProvider.DataDrivenTestingUsingFile;
+//import POJO.RegisterLoginPostCall;
+//import Utils.JsonReader;
 //import Utils.PropertyReader;
+//import com.google.gson.JsonArray;
 //import core.StatusCode;
 //import io.restassured.http.Header;
 //import io.restassured.http.Headers;
 //import io.restassured.response.Response;
+//import org.json.simple.JSONArray;
+//import org.json.simple.parser.ParseException;
 //import org.testng.Assert;
 //import org.testng.annotations.Test;
 //
@@ -18,24 +25,33 @@
 //import java.nio.file.Paths;
 //import java.util.Arrays;
 //import java.util.List;
+//import java.util.Map;
 //import java.util.UUID;
 //
-//public class RegisterAPITest {
+//public class Practised {
 //    String BaseURI = PropertyReader.propertyReader("/Users/testvagrant/IdeaProjects/RestAssuredLearning/config.properties","BaseURI");
-//    @Test
-//    public void testRegisterAPI() {
 //
 //
-//        String uuid = UUID.randomUUID().toString();
-//        String randomemail = "user_" + uuid + "@example.com";
+//    @Test(dataProvider = "getTestData",dataProviderClass = DataDrivenTestingUsingFile.class)
+//    public void testRegisterAPI(Map<String, Object> data) throws IOException, ParseException {
+//
+//
+////        String uuid = UUID.randomUUID().toString();
+////        String randomemail = "user_" + uuid + "@example.com";
+//       // JSONArray jsonArray  = getJsonArray("User");
+////        String username = JsonReader.getTestData("username");
+////        String password = JsonReader.getTestData("password");
+//        String email = (String)data.get("username");
+//        String password = (String)data.get("password");
+//
+//
+//
+//        RegisterLoginPostCall  register = new RegisterLoginPostCall( email, password,password);
+//
 //        // Given: Precondition (API endpoint and request body)
 //                given()
 //                .header("Content-Type", "application/json")
-//                .body("{\n" +
-//                        "    \"email\":\"" + randomemail + "\",\n" +
-//                        "    \"password\": \"LeeCopper@12345\",\n" +
-//                        "    \"confirmpassword\": \"LeeCopper@12345\"\n" +
-//                        "}").log().all()
+//                .body( register ).log().all()
 //                // When: Action (the request is made)
 //                .when()
 //                .post(BaseURI+"/api/v1/register")

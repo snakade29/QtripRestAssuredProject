@@ -1,4 +1,5 @@
 package UserManagement;
+import DataProvider.DataDrivenTestingUsingFile;
 import POJO.RegisterLoginPostCall;
 
 import POJO.TripReservationPostCall;
@@ -19,8 +20,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
+import static core.ApiEndpoints.*;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -30,25 +33,30 @@ import static org.testng.Assert.assertEquals;
 public class TestCases
 {
     String BaseURI = PropertyReader.propertyReader( System.getProperty("user.dir")+"/config.properties","BaseURI");
-    String randomemail ;
+    String  randomemail ;
     RegisterLoginPostCall register ;
     String email ;
     String token;
     String id ;
     String AdventureID ;
     String reservationID;
+    String password ;
 
 
 
 
-    @Test( priority =1 ,description =" Verify User is  able Register with valid Credential")
-    public void RegisterUser ()
+    @Test( priority =1 ,description =" Verify User is  able Register with valid Credential",
+            dataProvider = "getTestData",dataProviderClass = DataDrivenTestingUsingFile.class)
+    public void RegisterUser (Map<String, Object> data)
     {
 
+        email = (String)data.get("username");
+        password = (String)data.get("password");
         String uuid = UUID.randomUUID().toString();
         randomemail = "user_" + uuid + "@example.com";
-        email = randomemail;
-          register = new RegisterLoginPostCall( randomemail,"password" ,"password");
+
+
+                register = new RegisterLoginPostCall(  randomemail,password ,password);
 
         // Given: Precondition (API endpoint and request body)
         given()
@@ -57,7 +65,7 @@ public class TestCases
 
                 // When: Action (the request is made)
                 .when()
-                .post(BaseURI+"/api/v1/register")
+                .post(BaseURI+ Register_User)
 
                 // Then: Expected result (response validation)
                 .then().assertThat()
@@ -68,7 +76,7 @@ public class TestCases
     public void ReregisterUser ()
     {
 
-         register = new RegisterLoginPostCall(email,"password" ,"password");
+         register = new RegisterLoginPostCall(email,password ,password);
 
         // Given: Precondition (API endpoint and request body)
         given()
@@ -77,7 +85,7 @@ public class TestCases
 
                 // When: Action (the request is made)
                 .when()
-                .post(BaseURI+"/api/v1/register")
+                .post(BaseURI+Register_User)
 
                 // Then: Expected result (response validation)
                 .then().assertThat()
@@ -85,7 +93,8 @@ public class TestCases
     }
 
 
-    @Test(priority =3 ,description = "Verify User is able to Login",dependsOnMethods = { "RegisterUser" })
+    @Test(priority =3 ,description = "Verify User is able to Login",
+            dependsOnMethods = { "RegisterUser" })
     public void RegisterloginTest()
     {
 
@@ -98,7 +107,7 @@ public class TestCases
 
                 // When: Action (the request is made)
                 .when()
-                .post(BaseURI+"/api/v1/login")
+                .post(BaseURI+ Login)
                    .then().statusCode(StatusCode.CREATED.code)
                    .body("success",org.hamcrest.Matchers.is(true))
                    .extract().response().prettyPeek();
@@ -111,14 +120,15 @@ public class TestCases
 
 @Test  (priority =4 ,description ="Verify user is able to search for adventures")
 public void   GetAdventureDetails() throws IOException {
-    File schemaFile = new File(System.getProperty("user.dir")+"/src/main/java/Schema/ExpectedAdventureResultSchema.txt");
+
+        File schemaFile = new File(System.getProperty("user.dir")+"/src/main/java/Schema/ExpectedAdventureResultSchema.txt");
 
     Response response  = given()
             .header("Cookie", "ARRAffinity=6f722d9ba8c6f7ac8a05d991523ce95c10a2df43a9a9f2a9d215eed82ec16bb7; ARRAffinitySameSite=6f722d9ba8c6f7ac8a05d991523ce95c10a2df43a9a9f2a9d215eed82ec16bb7")
 
             // Then: Expected result (response validation)
             .when()
-            .get(BaseURI+"/api/v1/adventures?city=bengaluru")
+            .get(BaseURI+Get_AdventureDetails)
             .then()
             .body(JsonSchemaValidator.matchesJsonSchema(schemaFile))
             .extract().response().prettyPeek();
@@ -151,16 +161,17 @@ public void   GetAdventureDetails() throws IOException {
 
 
 
-    @Test(priority =5 ,description = "Verify user is able to book the Trip ",dependsOnMethods = { "RegisterloginTest" , "RegisterUser","GetAdventureDetails" })
-    public void TripReservation()
+    @Test(priority =5 ,description = "Verify user is able to book the Trip ",dependsOnMethods = { "RegisterloginTest" , "RegisterUser","GetAdventureDetails" }
+           , dataProvider = "TestData",dataProviderClass = DataDrivenTestingUsingFile.class)
+    public void TripReservation(Map<String, Object> data)
     {
         Faker faker = new Faker();
         // Create and populate the UserRegistration POJO with random data
         TripReservationPostCall trip = new TripReservationPostCall();
         trip.setUserId(id);
-        trip.setName(faker.name().fullName());
-        trip.setDate("2025-15-12");
-        trip.setPerson(String.valueOf(faker.number().numberBetween(1, 10)));
+        trip.setName( (String)data.get("name"));
+        trip.setDate((String)data.get("date"));
+        trip.setPerson((String)data.get("person"));
         trip.setAdventure(AdventureID);
 
         // Given: Precondition (API endpoint and request body)
@@ -170,7 +181,7 @@ public void   GetAdventureDetails() throws IOException {
 
                 // When: Action (the request is made)
                 .when()
-                .post(BaseURI+"/api/v1/reservations/new?id=bengaluru")
+                .post(BaseURI+Reservation)
                 .then()
                 .statusCode(StatusCode.SUCCESS.code)
                // .body("success",org.hamcrest.Matchers.is(true))
@@ -190,7 +201,7 @@ public void   GetAdventureDetails() throws IOException {
 
                 // Then: Expected result (response validation)
                 .when()
-                .get(BaseURI+"/api/v1/reservations?id="+id)
+                .get(BaseURI+CheckReservation_Get+id)
                 .then()
                 .statusCode(StatusCode.SUCCESS.code)
                 .extract().response().prettyPeek();
@@ -213,7 +224,7 @@ public void   GetAdventureDetails() throws IOException {
                         "}").log().all()
                 // Then: Expected result (response validation)
                 .when()
-                .delete(BaseURI+"/api/v1/reservations/"+reservationID)
+                .delete(BaseURI+ Delete_Reservation +reservationID)
 
                 .then()
                 .extract().response().prettyPeek();
