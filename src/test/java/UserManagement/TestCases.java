@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -32,6 +33,9 @@ import static org.testng.Assert.assertEquals;
 
 public class TestCases
 {
+    List<String> cities = Arrays.asList("bengaluru", "goa", "kolkata", "singapore", "malaysia", "bangkok", "new-york", "paris");
+
+    List<String> expectedIds = Arrays.asList("2447910730", "1773524915", "0355034513", "2260150453", "1921387712", "7938812489", "2757195090", "3727396712", "2211420097");
     String BaseURI = PropertyReader.propertyReader( System.getProperty("user.dir")+"/config.properties","BaseURI");
     String  randomemail ;
     RegisterLoginPostCall register ;
@@ -123,6 +127,8 @@ public void   GetAdventureDetails() throws IOException {
 
         File schemaFile = new File(System.getProperty("user.dir")+"/src/main/java/Schema/ExpectedAdventureResultSchema.txt");
 
+
+
     Response response  = given()
             .header("Cookie", "ARRAffinity=6f722d9ba8c6f7ac8a05d991523ce95c10a2df43a9a9f2a9d215eed82ec16bb7; ARRAffinitySameSite=6f722d9ba8c6f7ac8a05d991523ce95c10a2df43a9a9f2a9d215eed82ec16bb7")
 
@@ -133,9 +139,8 @@ public void   GetAdventureDetails() throws IOException {
             .body(JsonSchemaValidator.matchesJsonSchema(schemaFile))
             .extract().response().prettyPeek();
     List<String> actualIds = response.jsonPath().getList("id");
-    assertThat(actualIds, hasItems("2447910730", "1773524915", "0355034513", "2260150453", "1921387712", "7938812489", "2757195090", "3727396712", "2211420097"));
+    assertThat(actualIds, hasItems(expectedIds.toArray(new String[0])));
     assertEquals(response.jsonPath().getList("").size(), 9);
-    // Additional checks
   assertEquals(actualIds.size(), 9); // Validate that the response contains some cities
 // assertEquals(response.jsonPath().getString("[0].id"), notNullValue());
     response.then().body("[0].id",equalTo("2447910730"));
@@ -252,9 +257,10 @@ public void   GetAdventureDetails() throws IOException {
 
         // Then: Expected result (response validation)
         List<String> actualIds = response.jsonPath().getList("id");
+        assertThat(actualIds, hasItems(cities.toArray(new String[0])));
 
         // Assert that the response contains specific city IDs
-        assertThat(actualIds, hasItems("bengaluru", "goa", "kolkata", "singapore", "malaysia", "bangkok", "new-york", "paris"));
+
         assertThat(response.jsonPath().getList(""), hasSize(8));
         // Additional checks
         assertThat(actualIds.size(), greaterThan(0)); // Validate that the response contains some cities
