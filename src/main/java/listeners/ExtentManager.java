@@ -32,7 +32,7 @@ public class ExtentManager
     public static ExtentReports createInstance()
     {
 
-        ExtentSparkReporter sparkReporter=new ExtentSparkReporter(System.getProperty("user.dir")+"/reports/Automation_"+ ReusableMethods.getCurrentTime() +".html");
+        ExtentSparkReporter sparkReporter=new ExtentSparkReporter(System.getProperty("user.dir")+"/reports/Automation_"+".html");
         sparkReporter.config().setTheme(Theme.DARK);
         sparkReporter.config().setReportName("Automation Report");
         sparkReporter.config().setDocumentTitle("Sprint 1 Report");

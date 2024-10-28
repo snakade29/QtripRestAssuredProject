@@ -21,7 +21,7 @@ public class DataDrivenTestingUsingFile {
         Object[] obj = null;
         try {
             // Specify the file path of your JSON test data
-            File filename = new File("Resources//TestData//RegisterTestData.json");
+            File filename = new File("Resources/TestData/RegisterTestData.json");
             // Read the JSON file as a string
             String json = FileUtils.readFileToString(filename, "UTF-8");
             List<Map<String, Object>> jsonData = JsonPath.read(json, "$");
@@ -39,7 +39,7 @@ public class DataDrivenTestingUsingFile {
         Object[] obj = null;
         try {
             // Specify the file path of your JSON test data
-            File filename = new File("Resources//TestData//AdventureBookingTestData.json");
+            File filename = new File("Resources/TestData/AdventureBookingTestData.json");
             // Read the JSON file as a string
             String json = FileUtils.readFileToString(filename, "UTF-8");
             List<Map<String, Object>> jsonData = JsonPath.read(json, "$");

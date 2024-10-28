@@ -36,7 +36,7 @@ public class TestCases
     List<String> cities = Arrays.asList("bengaluru", "goa", "kolkata", "singapore", "malaysia", "bangkok", "new-york", "paris");
 
     List<String> expectedIds = Arrays.asList("2447910730", "1773524915", "0355034513", "2260150453", "1921387712", "7938812489", "2757195090", "3727396712", "2211420097");
-    String BaseURI = PropertyReader.propertyReader( System.getProperty("user.dir")+"/config.properties","BaseURI");
+    String BaseURI =  "https://content-qtripdynamic-qa-backend.azurewebsites.net/";
     String  randomemail ;
     RegisterLoginPostCall register ;
     String email ;
